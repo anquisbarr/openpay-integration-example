@@ -9,6 +9,7 @@ import {
   type FieldStatusRecord,
   openPayUtils,
 } from "openpay-react-integration";
+import { Iconoir } from 'iconoir-react';
 
 const openPay = createOpenPay({
   merchantId: "m09tnznpnhvlxyfnmbvd",
@@ -93,193 +94,205 @@ const FormExtractExample: React.FC = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow">
-      <h2 className="text-xl font-bold mb-4">OpenPay Form Example</h2>
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-blue-100 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Left Column - Payment Form */}
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+          <div className="bg-gradient-to-r from-indigo-600 to-indigo-800 px-8 py-6">
+            <h2 className="text-2xl font-bold text-white">OpenPay Payment Demo</h2>
+            <p className="mt-2 text-indigo-100">Enter your card details securely</p>
+          </div>
 
-      <form id="openpay-payment-form" onSubmit={handleSubmit} className="space-y-4">
-        {/* Card Number */}
-        <div>
-          {/* biome-ignore lint/a11y/noLabelWithoutControl: <explanation> */}
-          <label className="block text-sm font-medium text-gray-700">
-            Card Number
-            {fieldStatus.card_number?.cardType && (
-              <span className={`inline-flex px-2 py-1 rounded-md text-xs font-medium ml-2 ${
-                getCardTypeStyles(fieldStatus.card_number)
-              }`}>
-                {fieldStatus.card_number.cardType.toUpperCase()}
-              </span>
-            )}
-          </label>
-          <input
-            name="card_number"
-            data-openpay-card="card_number"
-            className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 ${
-              fieldStatus.card_number?.isValid
-                ? "border-green-300 focus:ring-green-500"
-                : "border-gray-300 focus:ring-indigo-500"
-            }`}
-            placeholder="4111111111111111"
-            maxLength={16}
-            onChange={(e) => handleFieldChange(e)}
-          />
-          {fieldStatus.card_number?.message && (
-            <p className={`mt-1 text-sm ${
-              fieldStatus.card_number.isValid ? "text-green-600" : "text-red-600"
-            }`}>
-              {fieldStatus.card_number.message}
-            </p>
-          )}
+          <div className="px-8 py-6">
+            <form id="openpay-payment-form" onSubmit={handleSubmit} className="space-y-6">
+              {/* Card Number */}
+              <div>
+                <label htmlFor="card_number" className="block text-sm font-semibold text-gray-700 mb-2">
+                  Card Number
+                  {fieldStatus.card_number?.cardType && (
+                    <span className={`inline-flex px-3 py-1 rounded-full text-xs font-medium ml-2 ${
+                      getCardTypeStyles(fieldStatus.card_number)
+                    }`}>
+                      {fieldStatus.card_number.cardType.toUpperCase()}
+                    </span>
+                  )}
+                </label>
+                <input
+                  id="card_number"
+                  name="card_number"
+                  data-openpay-card="card_number"
+                  className={`w-full px-4 py-3 rounded-lg border-2 transition-colors duration-200 ease-in-out focus:outline-none ${
+                    fieldStatus.card_number?.isValid
+                      ? "border-green-400 focus:border-green-500"
+                      : "border-gray-200 focus:border-indigo-500"
+                  }`}
+                  placeholder="4111 1111 1111 1111"
+                  maxLength={16}
+                  onChange={(e) => handleFieldChange(e)}
+                />
+                {fieldStatus.card_number?.message && (
+                  <p className={`mt-1 text-sm ${
+                    fieldStatus.card_number.isValid ? "text-green-600" : "text-red-600"
+                  }`}>
+                    {fieldStatus.card_number.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Holder Name */}
+              <div>
+                <label htmlFor="holder_name" className="block text-sm font-semibold text-gray-700 mb-2">
+                  Holder Name
+                </label>
+                <input
+                  id="holder_name"
+                  name="holder_name"
+                  data-openpay-card="holder_name"
+                  className={`w-full px-4 py-3 rounded-lg border-2 transition-colors duration-200 ease-in-out focus:outline-none ${
+                    fieldStatus.holder_name?.isValid
+                      ? "border-green-400 focus:border-green-500"
+                      : "border-gray-200 focus:border-indigo-500"
+                  }`}
+                  placeholder="JOHN DOE"
+                  onChange={(e) => handleFieldChange(e)}
+                />
+                {fieldStatus.holder_name?.message && (
+                  <p className={`mt-1 text-sm ${
+                    fieldStatus.holder_name.isValid ? "text-green-600" : "text-red-600"
+                  }`}>
+                    {fieldStatus.holder_name.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Expiration Date and CVV */}
+              <div className="grid grid-cols-3 gap-4">
+                <div className="col-span-1">
+                  <label htmlFor="expiration_month" className="block text-sm font-semibold text-gray-700 mb-2">
+                    Month
+                  </label>
+                  <input
+                    id="expiration_month"
+                    name="expiration_month"
+                    data-openpay-card="expiration_month"
+                    className={`w-full px-4 py-3 rounded-lg border-2 transition-colors duration-200 ease-in-out focus:outline-none ${
+                      fieldStatus.expiration_month?.isValid
+                        ? "border-green-400"
+                        : "border-gray-200"
+                    }`}
+                    placeholder="MM"
+                    maxLength={2}
+                    onChange={(e) => handleFieldChange(e, fieldStatus.expiration_year?.value)}
+                  />
+                </div>
+                <div className="col-span-1">
+                  <label htmlFor="expiration_year" className="block text-sm font-semibold text-gray-700 mb-2">
+                    Year
+                  </label>
+                  <input
+                    id="expiration_year"
+                    name="expiration_year"
+                    data-openpay-card="expiration_year"
+                    className={`w-full px-4 py-3 rounded-lg border-2 transition-colors duration-200 ease-in-out focus:outline-none ${
+                      fieldStatus.expiration_year?.isValid
+                        ? "border-green-400"
+                        : "border-gray-200"
+                    }`}
+                    placeholder="YY"
+                    maxLength={2}
+                    onChange={(e) => handleFieldChange(e, fieldStatus.expiration_month?.value)}
+                  />
+                </div>
+                <div className="col-span-1">
+                  <label htmlFor="cvv2" className="block text-sm font-semibold text-gray-700 mb-2">
+                    CVV
+                  </label>
+                  <input
+                    id="cvv2"
+                    name="cvv2"
+                    data-openpay-card="cvv2"
+                    className={`w-full px-4 py-3 rounded-lg border-2 transition-colors duration-200 ease-in-out focus:outline-none ${
+                      fieldStatus.cvv2?.isValid
+                        ? "border-green-400"
+                        : "border-gray-200"
+                    }`}
+                    placeholder="123"
+                    maxLength={4}
+                    onChange={(e) => handleFieldChange(e, fieldStatus.card_number?.value)}
+                  />
+                </div>
+              </div>
+
+              {/* Error and Success Messages */}
+              {error && (
+                <div className="rounded-lg bg-red-50 p-4 border-l-4 border-red-400">
+                  <div className="flex">
+                    <div className="flex-shrink-0">
+                      <Iconoir name="exclamation-triangle" className="h-5 w-5 text-red-400" />
+                    </div>
+                    <div className="ml-3">
+                      <p className="text-sm text-red-700">
+                        {error.message}
+                        {error.data?.description && <>: {error.data.description}</>}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {token && (
+                <div className="rounded-lg bg-green-50 p-4 border-l-4 border-green-400">
+                  <div className="flex">
+                    <div className="flex-shrink-0">
+                      <Iconoir name="check-circle" className="h-5 w-5 text-green-400" />
+                    </div>
+                    <div className="ml-3">
+                      <p className="text-sm text-green-700">
+                        Payment processed successfully
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Submit Button */}
+              <button
+                type="submit"
+                className="w-full bg-gradient-to-r from-indigo-600 to-indigo-800 text-white py-3 px-4 rounded-lg font-medium hover:from-indigo-700 hover:to-indigo-900 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                Process Payment
+              </button>
+            </form>
+          </div>
         </div>
 
-        {/* Holder Name */}
-        <div>
-          {/* biome-ignore lint/a11y/noLabelWithoutControl: <explanation> */}
-          <label className="block text-sm font-medium text-gray-700">
-            Holder Name
-          </label>
-          <input
-            name="holder_name"
-            data-openpay-card="holder_name"
-            className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 ${
-              fieldStatus.holder_name?.isValid
-                ? "border-green-300 focus:ring-green-500"
-                : "border-gray-300 focus:ring-indigo-500"
-            }`}
-            placeholder="JOHN DOE"
-            onChange={(e) => handleFieldChange(e)}
-          />
-          {fieldStatus.holder_name?.message && (
-            <p className={`mt-1 text-sm ${
-              fieldStatus.holder_name.isValid ? "text-green-600" : "text-red-600"
-            }`}>
-              {fieldStatus.holder_name.message}
-            </p>
-          )}
-        </div>
-
-        {/* Expiration */}
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            {/* biome-ignore lint/a11y/noLabelWithoutControl: <explanation> */}
-            <label className="block text-sm font-medium text-gray-700">
-              Expiration Month
-            </label>
-            <input
-              name="expiration_month"
-              data-openpay-card="expiration_month"
-              className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm ${
-                fieldStatus.expiration_month?.isValid
-                  ? "border-green-300"
-                  : "border-gray-300"
-              }`}
-              placeholder="12"
-              maxLength={2}
-              onChange={(e) => handleFieldChange(e, fieldStatus.expiration_year?.value)}
-            />
-          </div>
-          <div>
-            {/* biome-ignore lint/a11y/noLabelWithoutControl: <explanation> */}
-            <label className="block text-sm font-medium text-gray-700">
-              Expiration Year
-            </label>
-            <input
-              name="expiration_year"
-              data-openpay-card="expiration_year"
-              className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm ${
-                fieldStatus.expiration_year?.isValid
-                  ? "border-green-300"
-                  : "border-gray-300"
-              }`}
-              placeholder="25"
-              maxLength={2}
-              onChange={(e) => handleFieldChange(e, fieldStatus.expiration_month?.value)}
-            />
-          </div>
-          {(fieldStatus.expiration_month?.message || fieldStatus.expiration_year?.message) && (
-            <div className="col-span-2">
-              <p className="text-sm text-red-600">
-                {fieldStatus.expiration_month?.message || fieldStatus.expiration_year?.message}
-              </p>
-            </div>
-          )}
-        </div>
-
-        {/* CVV */}
-        <div>
-          {/* biome-ignore lint/a11y/noLabelWithoutControl: <explanation> */}
-          <label className="block text-sm font-medium text-gray-700">CVV</label>
-          <input
-            name="cvv2"
-            data-openpay-card="cvv2"
-            className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm ${
-              fieldStatus.cvv2?.isValid
-                ? "border-green-300"
-                : "border-gray-300"
-            }`}
-            placeholder="123"
-            maxLength={4}
-            onChange={(e) => handleFieldChange(e, fieldStatus.card_number?.value)}
-          />
-          {fieldStatus.cvv2?.message && (
-            <p className={`mt-1 text-sm ${
-              fieldStatus.cvv2.isValid ? "text-green-600" : "text-red-600"
-            }`}>
-              {fieldStatus.cvv2.message}
-            </p>
-          )}
-        </div>
-
-        {/* Error and Success Messages */}
-        {error && (
-          <div className="bg-red-50 border-l-4 border-red-400 p-4">
-            <p className="text-sm text-red-700">
-              {error.message}
-              {error.data?.description && <>: {error.data.description}</>}
-            </p>
-          </div>
-        )}
-
-        {token && (
-          <div className="bg-green-50 border-l-4 border-green-400 p-4">
-            <p className="text-sm text-green-700">
-              Token created successfully: {token.data.id}
-            </p>
-          </div>
-        )}
-
-        {/* Submit Button */}
-        <button
-          type="submit"
-          className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-        >
-          Process Payment
-        </button>
-      </form>
-
-      {/* Debug Information */}
-      <div className="mt-8">
-        <h3 className="text-lg font-medium mb-2">Debug Information</h3>
-        <div className="space-y-4">
-          <div>
-            <h4 className="text-sm font-medium text-gray-600">Device Session ID</h4>
-            <pre className="bg-gray-100 p-4 rounded-md overflow-auto text-sm">
-              {openPay.getDeviceSessionId()}
-            </pre>
-          </div>
-          <div>
-            <h4 className="text-sm font-medium text-gray-600">Field Status</h4>
-            <pre className="bg-gray-100 p-4 rounded-md overflow-auto text-sm">
-              {JSON.stringify(fieldStatus, null, 2)}
-            </pre>
-          </div>
-          {token && (
+        {/* Right Column - Debug Information */}
+        <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-8 text-black">
+          <h3 className="text-xl font-bold text-gray-900 mb-6">Debug Information</h3>
+          <div className="space-y-6">
             <div>
-              <h4 className="text-sm font-medium text-gray-600">Token Response</h4>
-              <pre className="bg-gray-100 p-4 rounded-md overflow-auto text-sm">
-                {JSON.stringify(token, null, 2)}
+              <h4 className="text-sm font-semibold text-gray-700 mb-2">Device Session ID</h4>
+              <pre className="bg-white/90 p-4 rounded-lg text-sm overflow-auto border border-indigo-100">
+                {openPay.getDeviceSessionId()}
               </pre>
             </div>
-          )}
+            
+            <div>
+              <h4 className="text-sm font-semibold text-gray-700 mb-2">Field Status</h4>
+              <pre className="bg-white/90 p-4 rounded-lg text-sm overflow-auto border border-indigo-100 max-h-[400px]">
+                {JSON.stringify(fieldStatus, null, 2)}
+              </pre>
+            </div>
+            
+            {token && (
+              <div>
+                <h4 className="text-sm font-semibold text-gray-700 mb-2">Token Response</h4>
+                <pre className="bg-white/90 p-4 rounded-lg text-sm overflow-auto border border-indigo-100">
+                  {JSON.stringify(token, null, 2)}
+                </pre>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
