@@ -7,6 +7,7 @@ import {
   type Card,
   type CardFieldStatus,
   type FieldStatusRecord,
+  openPayUtils,
 } from "openpay-react-integration";
 
 const openPay = createOpenPay({
@@ -39,8 +40,8 @@ const FormExtractExample: React.FC = () => {
 
     try {
       const form = e.currentTarget;
-      const extractedData = openPay.getFormCardInformation(form);
-      const validation = openPay.card.validateCard(extractedData as Card);
+      const extractedData = await openPay.getFormCardInformation(form);
+      const validation = openPayUtils.validators.card(extractedData);
 
       if (!validation.isValid) {
         setError({
